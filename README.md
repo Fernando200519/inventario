@@ -14,7 +14,7 @@ API REST completa para gestionar el inventario de una tienda, construida en Spri
 
 ````bash
 # 1. Clonar el repositorio
-git clone ??????
+git clone https://github.com/Fernando200519/inventario.git
 
 # 2. Entrar a la carpeta inventario
 cd inventario
