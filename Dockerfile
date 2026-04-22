@@ -1,13 +1,14 @@
-# Etapa 1: Build con JDK 25
-FROM gradle:jdk25 AS build  
+# Etapa 1: Construcción
+FROM gradle:jdk21-alpine AS compilacion
 WORKDIR /app
 COPY . .
-RUN chmod +x gradlew
-RUN ./gradlew build -x test --no-daemon
+# El flag -P evita que Gradle intente descargar otro Java y use el de la imagen
+RUN ./gradlew build -x test --no-daemon -Porg.gradle.java.installations.auto-download=false
 
-# Etapa 2: Runtime con JRE 25
-FROM eclipse-temurin:25-jre-alpine 
+# Etapa 2: Ejecución
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-COPY --from=build /app/build/libs/*.jar app.jar
+# Aquí usamos el nombre "compilacion" que definimos arriba
+COPY --from=compilacion /app/build/libs/*-SNAPSHOT.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
